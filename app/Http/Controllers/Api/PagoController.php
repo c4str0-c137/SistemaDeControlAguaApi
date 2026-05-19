@@ -243,7 +243,9 @@ class PagoController extends Controller
 
         return response()->json([
             'total_pagos'       => $totalPagos,
+            'pagos_del_mes'     => $totalPagos,
             'total_monto'       => round($montoDelMes, 2),
+            'monto_del_mes'     => round($montoDelMes, 2),
             'total_viviendas'   => $totalViviendas,
             'viviendas_pagadas' => $pagadas,
             'viviendas_pendientes' => $totalViviendas - $pagadas,
