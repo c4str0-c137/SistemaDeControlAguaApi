@@ -31,28 +31,39 @@ Route::middleware(['auth:sanctum', 'throttle:120,1'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
     Route::get('/ajustes', [AjusteController::class, 'index']);
 
+    // Rutas compartidas por Admin y Lector
+    Route::middleware('role:Admin,Lector')->group(function () {
+        Route::get('/viviendas', [ViviendaController::class, 'index']);
+        Route::get('/viviendas/{vivienda}', [ViviendaController::class, 'show']);
+        Route::get('/periodos/activo', [PeriodoController::class, 'activo']);
+        Route::get('/lecturas', [LecturaController::class, 'index']);
+        Route::post('/lecturas', [LecturaController::class, 'store']);
+        Route::get('/lecturas/vivienda/{vivienda}', [LecturaController::class, 'byVivienda']);
+        Route::get('/pagos/resumen', [PagoController::class, 'resumen']);
+    });
+
     // Solo Admin
     Route::middleware('role:Admin')->group(function () {
         // Socios / Usuarios
         Route::apiResource('socios', SocioController::class);
 
-        // Viviendas
-        Route::apiResource('viviendas', ViviendaController::class);
+        // Viviendas (Escritura y borrado)
+        Route::post('/viviendas', [ViviendaController::class, 'store']);
+        Route::put('/viviendas/{vivienda}', [ViviendaController::class, 'update']);
+        Route::delete('/viviendas/{vivienda}', [ViviendaController::class, 'destroy']);
 
         // Tarifas y Rangos
         Route::apiResource('tarifas', TarifaController::class);
         Route::apiResource('tarifa-rangos', TarifaRangoController::class);
 
-        // Períodos
-        Route::get('/periodos/activo', [PeriodoController::class, 'activo']);
-        Route::apiResource('periodos', PeriodoController::class);
+        // Períodos (Escritura y borrado)
+        Route::apiResource('periodos', PeriodoController::class)->except(['activo']);
 
-        // Lecturas (Admin puede crear/editar/borrar)
-        Route::get('/lecturas/vivienda/{vivienda}', [LecturaController::class, 'byVivienda']);
-        Route::apiResource('lecturas', LecturaController::class);
+        // Lecturas (Edición y borrado)
+        Route::put('/lecturas/{lectura}', [LecturaController::class, 'update']);
+        Route::delete('/lecturas/{lectura}', [LecturaController::class, 'destroy']);
 
-        // Pagos (Admin puede crear/borrar)
-        Route::get('/pagos/resumen', [PagoController::class, 'resumen']);
+        // Pagos (Admin completo)
         Route::post('/pagos/calcular', [PagoController::class, 'calcularDeuda']);
         Route::get('/pagos/pagados-en-periodo', [PagoController::class, 'pagadosEnPeriodo']);
         Route::apiResource('pagos', PagoController::class)->only(['index', 'store', 'show', 'destroy']);
@@ -71,11 +82,5 @@ Route::middleware(['auth:sanctum', 'throttle:120,1'])->group(function () {
         // Multas y Aportes
         Route::apiResource('multas', MultaController::class);
         Route::apiResource('aportes', AporteController::class);
-    });
-
-    // Admin y Lector pueden ver lecturas y pagos (las rutas GET ya están cubiertas por apiResource de Admin)
-    // Estas rutas solo sirven para Lector que no tiene acceso al apiResource completo
-    Route::middleware('role:Admin,Lector')->group(function () {
-        Route::get('/pagos/resumen', [PagoController::class, 'resumen']);
     });
 });

@@ -28,6 +28,14 @@ class DatabaseSeeder extends Seeder
             'role_id' => $adminRole->id,
         ]);
 
+        // 2.5 Usuario Lector
+        \App\Models\User::create([
+            'name' => 'Lecturador',
+            'email' => 'lector@agua.com',
+            'password' => bcrypt('password'),
+            'role_id' => $lectorRole->id,
+        ]);
+
         // 3. Zona
         $zonaNorte = \App\Models\Zone::create([
             'name' => 'Zona Norte',
