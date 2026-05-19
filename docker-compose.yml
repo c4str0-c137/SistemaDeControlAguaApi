@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: agua_api_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-agua_bd}
+      POSTGRES_USER: ${DB_USERNAME:-agua_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-agua_password_seguro}
+    volumes:
+      # Guardamos los datos en un volumen para que no se borren si se reinicia
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-agua_user} -d ${DB_DATABASE:-agua_bd}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nuestra API de Laravel
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agua_api_laravel
+    restart: always
+    ports:
+      - "8080:80" # En Dokploy o local, mapeamos el puerto 80 del contenedor al exterior
+    depends_on:
+      postgres:
+        condition: service_healthy # Espera a que la BD esté lista antes de encender Laravel
+    environment:
+      # Aquí le pasamos la conexión a Laravel
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres # El host es exactamente el nombre del servicio de arriba
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-agua_bd}
+      DB_USERNAME: ${DB_USERNAME:-agua_user}
+      DB_PASSWORD: ${DB_PASSWORD:-agua_password_seguro}
+      
+      # Otras variables importantes de Laravel que puedes cambiar
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY}
+      APP_URL: http://localhost
+
+volumes:
+  postgres_data:
