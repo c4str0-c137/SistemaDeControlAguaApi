@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Habilitamos mod_rewrite para que funcionen las rutas de Laravel
 RUN a2enmod rewrite
