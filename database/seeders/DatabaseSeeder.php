@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $socioRole = \App\Models\Role::create(['name' => 'Socio']);
 
         // 2. Usuario Administrador
-        \App\Models\User::factory()->create([
+        \App\Models\User::create([
             'name' => 'Administrador',
             'email' => 'admin@agua.com',
             'password' => bcrypt('password'),
