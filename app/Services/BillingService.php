@@ -31,7 +31,7 @@ class BillingService
                     if ($remaining <= 0) break;
                     $hasta = $rango->hasta ?? PHP_INT_MAX;
                     $desde = (float)$rango->desde;
-                    $tamañoRango = ($desde == 0) ? (float)$hasta : ($hasta - $desde);
+                    $tamañoRango = ($desde == 0) ? (float)$hasta : ($hasta - $desde + 1);
                     $consumoEnRango = min($remaining, $tamañoRango);
                     $costoParcial = $consumoEnRango * (float)$rango->precio_metro;
                     $costoConsumo += $costoParcial;
