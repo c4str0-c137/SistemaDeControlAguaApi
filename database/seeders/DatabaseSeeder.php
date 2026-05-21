@@ -15,55 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Roles
-        $adminRole = \App\Models\Role::create(['name' => 'Admin']);
-        $lectorRole = \App\Models\Role::create(['name' => 'Lector']);
-        $socioRole = \App\Models\Role::create(['name' => 'Socio']);
-
-        // 2. Usuario Administrador
-        \App\Models\User::create([
-            'name' => 'Administrador',
-            'email' => 'admin@agua.com',
-            'password' => bcrypt('password'),
-            'role_id' => $adminRole->id,
-        ]);
-
-        // 2.5 Usuario Lector
-        \App\Models\User::create([
-            'name' => 'Lecturador',
-            'email' => 'lector@agua.com',
-            'password' => bcrypt('password'),
-            'role_id' => $lectorRole->id,
-        ]);
-
-        // 3. Zona
-        $zonaNorte = \App\Models\Zone::create([
-            'name' => 'Zona Norte',
-            'description' => 'Sector norte de la ciudad'
-        ]);
-
-        // 4. Métodos de Pago
-        \App\Models\PaymentMethod::create(['name' => 'Efectivo']);
-        \App\Models\PaymentMethod::create(['name' => 'Transferencia']);
-
-        // 5. Tarifas y Rangos
-        $tarifaResidencial = \App\Models\Tarifa::create([
-            'nombre' => 'Residencial',
-            'monto_fijo' => 10.00
-        ]);
-
-        \App\Models\TarifaRango::create([
-            'tarifa_id' => $tarifaResidencial->id,
-            'desde' => 0,
-            'hasta' => 20,
-            'precio_metro' => 0.50
-        ]);
-
-        \App\Models\TarifaRango::create([
-            'tarifa_id' => $tarifaResidencial->id,
-            'desde' => 21,
-            'hasta' => 50,
-            'precio_metro' => 1.00
-        ]);
+        $this->call(ImportModificadoSeeder::class);
     }
 }
