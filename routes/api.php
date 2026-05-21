@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum', 'throttle:120,1'])->group(function () {
         Route::get('/viviendas', [ViviendaController::class, 'index']);
         Route::get('/viviendas/{vivienda}', [ViviendaController::class, 'show']);
         Route::get('/periodos/activo', [PeriodoController::class, 'activo']);
+        Route::get('/periodos', [PeriodoController::class, 'index']);
         Route::get('/lecturas', [LecturaController::class, 'index']);
         Route::post('/lecturas', [LecturaController::class, 'store']);
         Route::get('/lecturas/vivienda/{vivienda}', [LecturaController::class, 'byVivienda']);
