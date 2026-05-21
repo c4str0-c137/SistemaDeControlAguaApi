@@ -21,7 +21,7 @@ class ViviendaController extends Controller
         }
 
         $perPage = $request->integer('per_page', 50);
-        $perPage = min($perPage, 200);
+        $perPage = min($perPage, 1000);
 
         return response()->json($query->orderBy('codigo')->paginate($perPage));
     }

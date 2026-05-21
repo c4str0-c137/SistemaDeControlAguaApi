@@ -28,7 +28,7 @@ class LecturaController extends Controller
         }
 
         $perPage = $request->integer('per_page', 50);
-        $perPage = min($perPage, 200);
+        $perPage = min($perPage, 1000);
 
         $lecturas = $query->join('periodos', 'lecturas.periodo_id', '=', 'periodos.id')
             ->orderBy('periodos.fecha_inicio', 'desc')

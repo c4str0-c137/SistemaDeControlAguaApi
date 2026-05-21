@@ -149,7 +149,7 @@ class PagoController extends Controller
         }
 
         $perPage = $request->integer('per_page', 50);
-        $perPage = min($perPage, 200);
+        $perPage = min($perPage, 1000);
         $pagos = $query->orderBy('fecha_pago', 'desc')->paginate($perPage);
 
         return response()->json($pagos);
